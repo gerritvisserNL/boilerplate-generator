@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boilerplate Generator</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Boilerplate Generator</h1>
+
+    <form id="form">
+      <fieldset>
+        <legend>Font settings</legend>
+        <label
+          >Google Font naam:
+          <input type="text" id="fontName" value="Roboto" /></label
+        ><br />
+        <label
+          >Font weight: <input type="text" id="fontWeight" value="400" /></label
+        ><br />
+        <label
+          >Font size: <input type="text" id="fontSize" value="16px"
+        /></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Page settings</legend>
+        <label>HTML lang: <input type="text" id="lang" value="nl" /></label
+        ><br />
+        <label
+          >Page title: <input type="text" id="title" value="Boilerplate"
+        /></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Colors (:root, HSL)</legend>
+        <label
+          >Primary: <input type="text" id="primary" value="0, 0%, 0%" /></label
+        ><br />
+        <label
+          >Secondary:
+          <input type="text" id="secondary" value="0, 0%, 100%" /></label
+        ><br />
+        <label
+          >Accent:
+          <input type="text" id="accent" value="210, 100%, 40%" /></label
+        ><br />
+        <label
+          >Background:
+          <input type="text" id="background" value="0, 0%, 96%" /></label
+        ><br />
+        <label>Text: <input type="text" id="text" value="0, 0%, 20%" /></label>
+      </fieldset>
+
+      <button type="submit">Generate Code</button>
+    </form>
+
+    <div id="output" style="margin-top: 2rem"></div>
+    <div id="zipContainer"></div>
+
+    <!-- JSZip library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.11.1/jszip.min.js"></script>
+
+    <!-- Jouw boilerplate generator script -->
+    <script src="script.js"></script>
+  </body>
+</html>
