@@ -3,37 +3,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const output = document.getElementById("output");
   const zipContainer = document.getElementById("zipContainer");
 
-  // --- Copy to clipboard (moderne API) ---
-  const copyToClipboard = async (textarea) => {
-    try {
-      await navigator.clipboard.writeText(textarea.value);
-      alert("Copied to clipboard!");
-    } catch (err) {
-      console.error("Failed to copy:", err);
-      alert("Copy failed. Please copy manually.");
-    }
-  };
+  function copyToClipboard(textarea) {
+    textarea.select();
+    document.execCommand("copy");
+  }
 
-  // --- Download één bestand ---
-  const downloadFile = (filename, content) => {
+  function downloadFile(filename, content) {
     const blob = new Blob([content], { type: "text/plain" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = filename;
     a.click();
-    setTimeout(() => alert(`${filename} downloaded!`), 200);
-  };
+  }
 
-  // --- Formulier submit ---
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // --- Form values ---
     const fontName = document.getElementById("fontName").value.trim();
-    const fontWeight = document.getElementById("fontWeight").value;
-    const fontSize = document.getElementById("fontSize").value;
-    const lang = document.getElementById("lang").value;
-    const title = document.getElementById("title").value;
+    const fontWeightsInput = document.getElementById("fontWeight").value.trim();
+    const fontWeights = fontWeightsInput.split(";").map((w) => w.trim());
+    const fontSize = document.getElementById("fontSize").value.trim();
+    const lang = document.getElementById("lang").value.trim();
+    const title = document.getElementById("title").value.trim();
 
     const colors = {
       "--primary": document.getElementById("primary").value,
@@ -44,54 +35,86 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const rootColors = Object.entries(colors)
-      .map(([k, v]) => `  ${k}: hsl(${v});`)
+      .map(([k, v]) => `  ${k}: ${v.includes(",") ? `hsl(${v})` : v};`)
       .join("\n");
 
+    // Check Google Font existence
+    try {
+      const res = await fetch(
+        `https://fonts.googleapis.com/css2?family=${fontName.replaceAll(
+          " ",
+          "+"
+        )}`
+      );
+      if (!res.ok) {
+        alert(`Google Font "${fontName}" does not exist.`);
+        return;
+      }
+    } catch {
+      alert("Cannot reach Google Fonts. Check your internet connection.");
+      return;
+    }
+
+    // Validate font weights
+    const availableWeights = [
+      "100",
+      "200",
+      "300",
+      "400",
+      "500",
+      "600",
+      "700",
+      "800",
+      "900",
+    ];
+    const invalidWeights = fontWeights.filter(
+      (w) => !availableWeights.includes(w)
+    );
+    if (invalidWeights.length > 0) {
+      alert(
+        `The following font-weights may not be supported: ${invalidWeights.join(
+          ", "
+        )}. Use one of: ${availableWeights.join(", ")}`
+      );
+      return;
+    }
+
+    // Google Fonts link
     const googleFontPreconnect = `
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`;
-
     const googleFontLink = `<link href="https://fonts.googleapis.com/css2?family=${fontName.replaceAll(
       " ",
       "+"
-    )}:wght@${fontWeight}&display=swap" rel="stylesheet">`;
+    )}:wght@${fontWeights.join(";")}&display=swap" rel="stylesheet">`;
 
-    // --- File contents ---
+    // File contents
     const indexHTML = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="" />
-  <title>${title}</title>
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="reset.css" />
-  <link rel="stylesheet" href="styles.css" />
-  ${googleFontPreconnect}
-  ${googleFontLink}
-  <script src="script.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Generate a custom HTML, CSS, and JS boilerplate quickly with your chosen fonts, colors, and layout." />
+<title>${title}</title>
+<link rel="icon" href="favicon.ico">
+<link rel="stylesheet" href="reset.css" />
+<link rel="stylesheet" href="styles.css" />
+${googleFontPreconnect}
+${googleFontLink}
+<script src="script.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <header role="banner"><nav></nav></header>
-    <main role="main"></main>
-    <footer role="contentinfo"></footer>
-  </div>
+<div class="container">
+<header role="banner"><nav></nav></header>
+<main role="main"></main>
+<footer role="contentinfo"></footer>
+</div>
 </body>
 </html>`;
 
-    const stylesCSS = `:root {
-${rootColors}
-}
-
-html {
-  font-size: ${fontSize};
-}
-
-body {
-  font-family: '${fontName}', sans-serif;
-  font-weight: ${fontWeight};
-}
+    const stylesCSS = `:root {\n${rootColors}\n}\n
+html { font-size: ${fontSize}; }
+body { font-family: '${fontName}', sans-serif; font-weight: ${fontWeights[0]}; }
 
 .container {
   max-width: 1200px;
@@ -99,10 +122,9 @@ body {
   padding: 0 1rem;
 }`;
 
-    const scriptJS = `console.log("Boilerplate loaded");`;
+    const scriptJS = `// This file is intentionally left empty – add your custom scripts here`;
 
-    const resetCSS = `/* Modern CSS reset 2025 */
-*,
+    const resetCSS = `*,
 *::before,
 *::after { box-sizing: border-box; }
 * { margin: 0; padding: 0; }
@@ -122,7 +144,7 @@ table { border-collapse: collapse; border-spacing: 0; }`;
       { name: "reset.css", content: resetCSS },
     ];
 
-    // --- Output ---
+    // Display output
     output.innerHTML = "";
     files.forEach((file) => {
       const wrapper = document.createElement("div");
@@ -144,18 +166,20 @@ table { border-collapse: collapse; border-spacing: 0; }`;
         downloadFile(file.name, file.content)
       );
 
-      wrapper.append(label, copyBtn, downloadBtn, textarea);
+      wrapper.appendChild(label);
+      wrapper.appendChild(copyBtn);
+      wrapper.appendChild(downloadBtn);
+      wrapper.appendChild(textarea);
       output.appendChild(wrapper);
     });
 
-    // --- Scroll naar resultaat ---
-    output.scrollIntoView({ behavior: "smooth" });
+    // Smooth scroll to output
+    output.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // --- ZIP Download ---
+    // ZIP download
     zipContainer.innerHTML = "";
     const zipBtn = document.createElement("button");
     zipBtn.textContent = "Download All as ZIP";
-    zipBtn.style.marginTop = "1rem";
     zipBtn.addEventListener("click", async () => {
       if (typeof JSZip === "undefined") {
         alert("JSZip is not loaded. Check your internet connection.");
@@ -177,7 +201,6 @@ table { border-collapse: collapse; border-spacing: 0; }`;
         alert("Something went wrong while generating the ZIP file.");
       }
     });
-
     zipContainer.appendChild(zipBtn);
   });
 });
