@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Generate a fully customizable HTML, CSS, and JS boilerplate in seconds. Set fonts, colors, and page settings for fast, consistent web development."
+      content="Generate a fully customizable HTML, CSS, and JS boilerplate in seconds."
     />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
-
     <title>Boilerplate Generator</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
@@ -31,6 +30,19 @@
           <legend>Page settings</legend>
           <label>HTML lang: <input type="text" id="lang" value="en" /></label>
           <label>Page title: <input type="text" id="title" value="" /></label>
+          <label>Author: <input type="text" id="author" value="" /></label>
+          <label
+            >Favicon URL: <input type="text" id="favicon" value="favicon.ico"
+          /></label>
+          <label
+            >Line height: <input type="text" id="lineHeight" value="1.6"
+          /></label>
+          <label>
+            Meta description:
+            <textarea id="metaDescription" rows="3">
+Generate a fully customizable HTML, CSS, and JS boilerplate in seconds.</textarea
+            >
+          </label>
         </fieldset>
 
         <fieldset>
@@ -46,29 +58,60 @@
           /></label>
         </fieldset>
 
+        <fieldset id="colorsFieldset">
+          <legend>Colors (hsl, rgb, hex, keyword)</legend>
+          <div class="color-input">
+            <input
+              type="text"
+              class="color-name"
+              placeholder="Variable name"
+              value="primary"
+            />
+            <input
+              type="text"
+              class="color-value"
+              placeholder="Value"
+              value="0, 0%, 0%"
+            />
+          </div>
+          <div class="color-input">
+            <input
+              type="text"
+              class="color-name"
+              placeholder="Variable name"
+              value="secondary"
+            />
+            <input
+              type="text"
+              class="color-value"
+              placeholder="Value"
+              value="0, 0%, 100%"
+            />
+          </div>
+          <button type="button" id="addColorBtn">+ Add color</button>
+        </fieldset>
+
         <fieldset>
-          <legend>Colors (hsl, rgb, keyword)</legend>
+          <legend>Extras</legend>
           <label
-            >Primary: <input type="text" id="primary" value="0, 0%, 0%"
+            >Include sample header/main/footer:
+            <input type="checkbox" id="sampleContent"
           /></label>
-          <label
-            >Secondary: <input type="text" id="secondary" value="0, 0%, 100%"
-          /></label>
-          <label
-            >Accent: <input type="text" id="accent" value="210, 100%, 40%"
-          /></label>
-          <label
-            >Background: <input type="text" id="background" value="0, 0%, 96%"
-          /></label>
-          <label
-            >Text: <input type="text" id="text" value="0, 0%, 20%"
-          /></label>
+          <label>
+            Extra JS CDN (comma separated):
+            <input
+              type="text"
+              id="extraJS"
+              value=""
+              placeholder="https://cdn.example.com/script.js"
+            />
+          </label>
         </fieldset>
 
         <button type="submit">Generate Code</button>
       </form>
 
-      <div id="output" style="margin-top: 2rem"></div>
+      <div id="output"></div>
       <div id="zipContainer"></div>
     </div>
   </body>

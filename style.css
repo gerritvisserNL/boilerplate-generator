@@ -1,15 +1,9 @@
 :root {
-  --blue-100: hsl(210, 100%, 98%);
-  --blue-200: hsl(210, 90%, 92%);
-  --blue-500: hsl(210, 90%, 55%);
-  --blue-700: hsl(210, 85%, 35%);
-  --green-500: hsl(140, 60%, 45%);
-  --green-600: hsl(140, 65%, 35%);
-  --gray-700: hsl(210, 10%, 25%);
-  --gray-500: hsl(210, 10%, 45%);
   --radius: 0.6rem;
   --shadow: 0 2px 8px hsl(210 10% 10% / 0.1);
   --transition: 0.2s ease;
+  --button-color: hsl(140, 60%, 45%);
+  --button-hover-color: hsl(140, 65%, 35%);
 }
 
 html {
@@ -19,10 +13,9 @@ html {
 body {
   font-family: "Inter", sans-serif;
   line-height: 1.6;
-  color: var(--gray-700);
-  background: var(--blue-100);
   margin: 0;
-  display: block;
+  color: #111;
+  background: #f5f5f5;
 }
 
 .container {
@@ -31,12 +24,10 @@ body {
   align-items: center;
   margin: 1.5rem auto;
   width: 90%;
-  max-width: 1440px;
 }
 
 h1 {
   font-size: 2rem;
-  color: var(--blue-700);
   text-align: center;
   margin-bottom: 1.5rem;
 }
@@ -47,10 +38,10 @@ form {
   gap: 0.8rem;
   width: 100%;
   max-width: 600px;
-  padding: 1rem;
   background: white;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  padding: 1rem;
 }
 
 fieldset {
@@ -58,66 +49,60 @@ fieldset {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.8rem 1rem;
-  background: var(--blue-100);
-  border: 1px solid var(--blue-200);
+  background: #f0f4f8;
+  border: 1px solid #d0d8e8;
   border-radius: var(--radius);
 }
 
 legend {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--blue-700);
 }
 
 label {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.3rem;
   font-size: 0.95rem;
-  color: var(--gray-700);
 }
 
-label input[type="text"] {
-  flex: 1;
-  max-width: 180px;
-  margin-left: 0.8rem;
+label input[type="text"],
+label textarea {
+  flex: 1 1 100%;
   padding: 0.3rem 0.5rem;
-  font-size: 1rem;
-  border: 1px solid var(--blue-200);
   border-radius: var(--radius);
-  transition: border var(--transition);
+  border: 1px solid #d0d8e8;
+  background: #fff;
 }
 
-label input[type="text"]:focus {
+label input[type="text"]:focus,
+label textarea:focus {
   outline: none;
-  border-color: var(--blue-500);
+  border-color: #5555ff;
 }
 
+label input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Buttons */
 button {
   padding: 0.5rem 0.9rem;
-  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   border: none;
   border-radius: var(--radius);
   transition: background var(--transition), transform var(--transition);
-}
-
-button:hover {
-  transform: translateY(-1px);
-}
-
-button[type="submit"],
-#zipContainer button {
-  background: var(--green-500);
+  background: var(--button-color);
   color: white;
 }
 
-button[type="submit"]:hover,
-#zipContainer button:hover {
-  background: var(--green-600);
+button:hover {
+  background: var(--button-hover-color);
 }
 
+/* Output area */
 #output {
   width: 100%;
   max-width: 900px;
@@ -127,61 +112,96 @@ button[type="submit"]:hover,
 #output > div {
   padding: 1rem;
   background: white;
-  border: 1px solid var(--blue-200);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   margin-bottom: 1rem;
 }
 
 #output h3 {
-  font-size: 1.1rem;
-  color: var(--blue-700);
   margin-bottom: 0.5rem;
 }
 
 .copy-btn {
   padding: 0.3rem 0.6rem;
-  font-size: 0.9rem;
   font-weight: 500;
-  background: var(--blue-500);
-  color: white;
-  border: none;
   border-radius: var(--radius);
-  cursor: pointer;
+  border: none;
   margin-right: 0.5rem;
-  transition: background var(--transition);
+  cursor: pointer;
+  background: var(--button-color);
+  color: white;
 }
 
 .copy-btn:hover {
-  background: var(--blue-700);
+  background: var(--button-hover-color);
 }
 
 textarea {
   width: 100%;
-  height: 220px;
+  min-height: 80px;
   margin-top: 0.5rem;
-  padding: 0.6rem;
+  padding: 0.5rem;
   font-family: "Fira Code", monospace;
   font-size: 0.9rem;
-  border: 1px solid var(--blue-200);
   border-radius: var(--radius);
-  background: var(--blue-100);
+  border: 1px solid #d0d8e8;
+  background: #f0f4f8;
   resize: vertical;
-  transition: border var(--transition);
-}
-
-textarea:focus {
-  outline: none;
-  border-color: var(--blue-500);
 }
 
 #zipContainer {
   margin-bottom: 2rem;
 }
 
+/* Color inputs */
+.color-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.color-input input {
+  flex: 1 1 100%;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid #d0d8e8;
+}
+
+/* Responsive adjustments */
+@media (min-width: 360px) {
+  .container {
+    width: 90%;
+  }
+}
+
 @media (min-width: 480px) {
   .container {
     width: 85%;
+  }
+}
+
+@media (min-width: 600px) {
+  label {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  label input[type="text"],
+  label textarea {
+    flex: 1;
+    margin-top: 0;
+    margin-left: 0.8rem;
+    max-width: 350px;
+  }
+
+  .color-input {
+    flex-direction: row;
+  }
+  .color-input input {
+    flex: 1;
+    max-width: 50%;
   }
 }
 
